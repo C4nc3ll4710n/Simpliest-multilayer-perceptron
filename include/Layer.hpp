@@ -8,10 +8,11 @@
 #define LAYER_HPP
 
 
-template <typename T,  T (*func)(const std::vector<T>&, const std::vector<T>&, T)>
-class Layer 
+template <typename T,  T (*func)(const std::vector<T>&, const std::vector<T>&, T, int)>
+class Layer
 {
     std::vector<Neuron<T>> neurons;
+    int type;
 
 public:
 
@@ -19,16 +20,19 @@ public:
     {
         
         std::string fbias, fweight;
+        type = 0;
 
         if (numNeurons == 200)
         {
             fbias   = "net_train_bias1.bin";
             fweight = "net_train_weight1.bin";
+            type = 1;
         }
         else if (numNeurons == 10) 
         {
             fbias   = "net_train_bias2.bin";
             fweight = "net_train_weight2.bin";
+            type = 2;
         }
         else
             std::cerr << "didn't expect this kind of number... I have no such file..." << std::endl;
@@ -55,7 +59,7 @@ public:
             {
                 fwght.read(buffer, sizeof(T));
                 std::memcpy(&weights[i][k], buffer, sizeof(T));
-                std::cout <<"weight \033[32m" << "neuron " << k << " " << i << " " << weights[i][k] << "\033[0m\n";
+                //std::cout <<"weight \033[32m" << "neuron " << k << " " << i << " " << weights[i][k] << "\033[0m\n";
             }
             //std::cout << "\033[32m" << bias[i] << " " << weights[0] << "\033[0m \n";
             
@@ -73,13 +77,13 @@ public:
     {
         std::vector<T> temp(neurons.size());
         std::vector<std::future<T>> futures;
-        std::cout << neurons.size() << "NOWA\n";
+        std::cout << neurons.size()<< " " << type << " NOWA\n";
         for (size_t i = 0; i < neurons.size(); i++) 
         {
             futures.push_back(std::async(std::launch::async, [i, &values, this]() -> T 
                 {
                     //std::cout << "\033[31m Neuron " << i + 1 << "\033[0m\n";
-                    return func(values, neurons[i].giveWeights(), neurons[i].giveBias());
+                    return func(values, neurons[i].giveWeights(), neurons[i].giveBias(), type);
                 })
             );
         }

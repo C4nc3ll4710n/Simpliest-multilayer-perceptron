@@ -6,10 +6,8 @@
 
 
 int main(){
-
-
-    MLPerceptron<double, purelin> mlperc;
-    std::string filename = "header2.pgm";
+    MLPerceptron<double> mlperc;
+    std::string filename = "t10kimage.pgm";
     std::vector<double> values(784, 0);
     std::ifstream f(filename, std::ios::binary);
 
@@ -26,16 +24,16 @@ int main(){
     f.close();
 
 
-    /*int num = 1;
+    int num = 1;
     for (double val : values)
     {
         std::cout << std::fixed << val << " \n";
         num++;
     }
-    std::cout << std::endl;*/
+    std::cout << std::endl;
 
     mlperc.process(values);
-    int num = 1;
+    num = 1;
     for (double val : values)
     {
         std::cout << num << ": " << std::fixed << val << " \n";
