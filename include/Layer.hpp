@@ -51,11 +51,11 @@ public:
         }
         fbs.close();
 
-        std::vector<std::vector<T>> weights(prevNeurons, std::vector<T>(numNeurons));
+        std::vector<std::vector<T>> weights(numNeurons, std::vector<T>(prevNeurons));
         //std::cout << "\033[31m" << "ALERT" << "\033[0m \n";
-        for (size_t i = 0; i<prevNeurons; i++)
+        for (size_t i = 0; i<numNeurons; i++)
         {
-            for (size_t k = 0; k<numNeurons; k++)
+            for (size_t k = 0; k<prevNeurons; k++)
             {
                 fwght.read(buffer, sizeof(T));
                 std::memcpy(&weights[i][k], buffer, sizeof(T));
